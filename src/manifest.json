@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "paratranz-helper",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Y式植林装置",
+  "content_scripts": [
+    {
+      "matches": ["https://paratranz.cn/projects/1511/*"],
+      "js": ["index.js"]
+    }
+  ],
+  "permissions": ["webRequest"],
+  "host_permissions": ["http://*/*", "https://*/*"],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "aerijhoanhoia",
+      "strict_min_version": "109.0"
+    }
+  }
+}
