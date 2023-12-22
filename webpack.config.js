@@ -2,11 +2,15 @@
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const ZipPlugin = require("zip-webpack-plugin");
+const Dotenv = require("dotenv-webpack");
 
 module.exports = () => {
   return {
     mode: process.env.TARGET === "dev" ? "development" : "production",
     watch: process.env.TARGET === "dev",
+    // Paratranz doesn't allow eval by its CSP
+    devtool:
+      process.env.TARGET === "dev" ? "cheap-module-source-map" : undefined,
     entry: {
       index: "./src/index.ts",
     },
@@ -17,15 +21,16 @@ module.exports = () => {
     module: {
       rules: [
         {
-          test: /\.ts$/,
+          test: /\.tsx?$/,
           use: [{ loader: "ts-loader" }],
         },
       ],
     },
     resolve: {
-      extensions: [".ts", ".js"],
+      extensions: [".tsx", ".ts", ".js"],
     },
     plugins: [
+      new Dotenv(),
       new CopyPlugin({
         patterns: [{ from: "src/manifest.json", to: "manifest.json" }],
       }),
