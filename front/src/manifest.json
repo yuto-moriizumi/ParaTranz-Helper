@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "paratranz-helper",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "author": "Y式植林装置",
   "content_scripts": [

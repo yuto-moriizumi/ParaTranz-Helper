@@ -2,7 +2,6 @@
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const ZipPlugin = require("zip-webpack-plugin");
-const Dotenv = require("dotenv-webpack");
 
 module.exports = () => {
   return {
@@ -30,7 +29,6 @@ module.exports = () => {
       extensions: [".tsx", ".ts", ".js"],
     },
     plugins: [
-      new Dotenv(),
       new CopyPlugin({
         patterns: [{ from: "src/manifest.json", to: "manifest.json" }],
       }),
