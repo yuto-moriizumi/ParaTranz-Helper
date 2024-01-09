@@ -30,7 +30,10 @@ module.exports = () => {
     },
     plugins: [
       new CopyPlugin({
-        patterns: [{ from: "src/manifest.json", to: "manifest.json" }],
+        patterns: ["manifest.json", "logo.png", "logo48.png"].map((name) => ({
+          from: "src/" + name,
+          to: name,
+        })),
       }),
       ...(process.env.TARGET === "dev"
         ? []
