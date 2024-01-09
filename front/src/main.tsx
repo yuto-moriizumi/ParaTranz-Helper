@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
+import { ApiRequest, ApiResponse } from "common";
 
 export function Main() {
   return <Sub />;
@@ -10,6 +11,7 @@ function Sub() {
     undefined,
   );
   const [text, setText] = useState("翻訳中...");
+  const [key, setKey] = useState("");
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -17,6 +19,13 @@ function Sub() {
         document.getElementsByClassName("original well").item(0)?.textContent ??
           undefined,
       );
+      const tbody = document.getElementsByTagName("tbody").item(0);
+      if (tbody === null) return;
+      const tr = tbody.children.item(0);
+      if (tr === null) return;
+      const td = tr.children.item(1);
+      if (td === null || td.textContent === null) return;
+      setKey(td.textContent.trim());
     }, 100);
     return () => clearInterval(interval);
   }, []);
@@ -24,14 +33,19 @@ function Sub() {
   useEffect(() => {
     if (originalText === undefined) return;
     setText("翻訳中...");
-
+    const mode = getMode(key);
     axios
-      .post(
+      .post<ApiResponse, AxiosResponse<ApiResponse>, ApiRequest>(
         "https://1thrt62esf.execute-api.ap-northeast-1.amazonaws.com/translate",
-        { text: originalText },
+        {
+          text: originalText,
+          isAdjectiveCountryName: mode === "adjective",
+        },
       )
-      .then(({ data }) => setText(data.text));
-  }, [originalText]);
+      .then(({ data }) =>
+        setText((mode === "definition" ? "the " : "") + data.text),
+      );
+  }, [key, originalText]);
 
   return (
     <div
@@ -66,4 +80,10 @@ function Sub() {
       </div>
     </div>
   );
+}
+
+function getMode(key: string) {
+  if (key.endsWith("DEF:0")) return "definition";
+  if (key.endsWith("ADJ:0")) return "adjective";
+  return "normal";
 }

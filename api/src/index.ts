@@ -1,6 +1,7 @@
 import express, { json } from "express";
 import cors from "cors";
 import { GlossaryEntries, Translator } from "deepl-node";
+import { ApiRequest, ApiResponse } from "common";
 
 const app = express();
 
@@ -12,21 +13,24 @@ app.get("/", (_, res) => {
 app.use(json());
 app.use(cors());
 
-app.post<object, object, { text: string }>("/translate", async (req, res) => {
-  console.log({ inc: req.body.text });
-  const translator = new Translator(process.env.DEEPL_KEY ?? "");
-  const glossaries = await translator.listGlossaries();
-  const glossary = glossaries.length > 0 ? glossaries[0] : undefined;
-  const { text } = await translator.translateText(
-    req.body.text,
-    "ja",
-    "en-US",
-    {
+app.post<object, ApiResponse, ApiRequest>(
+  "/translate",
+  async ({ body }, res) => {
+    console.log({ inc: body.text });
+    const translator = new Translator(process.env.DEEPL_KEY ?? "");
+    const glossaries = await translator.listGlossaries();
+    const glossary = glossaries.length > 0 ? glossaries[0] : undefined;
+    const textBefore = body.isAdjectiveCountryName
+      ? `<p><span>${body.text}</span>国籍</p>`
+      : body.text;
+    const { text } = await translator.translateText(textBefore, "ja", "en-US", {
       glossary,
-    },
-  );
-  res.send({ text: text });
-});
+    });
+    if (!body.isAdjectiveCountryName) return res.send({ text: text });
+    const adjective = text.match(/<span>(.+)<\/span>/)?.[1] ?? text;
+    res.send({ text: adjective });
+  },
+);
 
 type ParatranzTerms = { results: { term: string; translation: string }[] };
 
