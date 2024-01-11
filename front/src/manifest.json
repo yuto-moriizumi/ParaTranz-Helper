@@ -1,21 +1,18 @@
 {
   "manifest_version": 3,
   "name": "paratranz-helper",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "",
   "author": "Y式植林装置",
-  "icons": {
-    "48": "logo48.png",
-    "128": "logo.png"
-  },
+  "icons": { "32": "logo32.png", "48": "logo48.png", "128": "logo.png" },
   "content_scripts": [
     {
-      "matches": ["https://paratranz.cn/projects/1511/*"],
+      "matches": ["https://paratranz.cn/projects/*"],
       "js": ["index.js"]
     }
   ],
   "host_permissions": [
-    "https://paratranz.cn/projects/1511/*",
+    "https://paratranz.cn/projects/*",
     "https://1thrt62esf.execute-api.ap-northeast-1.amazonaws.com/*"
   ],
   "browser_specific_settings": {

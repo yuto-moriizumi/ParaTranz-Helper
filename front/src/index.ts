@@ -8,8 +8,7 @@ async function main() {
     const translationArea = document
       .getElementsByClassName("translation-area")
       .item(0);
-    if (translationArea === null)
-      return console.error("translationArea was not found");
+    if (translationArea === null) return;
     const display = document.createElement("div");
     display.id = "paratranz-helper-container";
     translationArea.parentNode?.insertBefore(
