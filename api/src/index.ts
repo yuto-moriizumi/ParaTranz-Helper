@@ -25,6 +25,7 @@ app.post<object, ApiResponse, ApiRequest>(
       const { text } = await translator.translateText(input, "ja", "en-US", {
         glossary,
         tagHandling: "html",
+        splitSentences: "on",
       });
       return text;
     }
@@ -35,7 +36,7 @@ app.post<object, ApiResponse, ApiRequest>(
       res.send({ text: adjective });
     } else {
       const text = decode(await translate(encode(body.text)));
-      res.send({ text });
+      res.send({ text: text[0].toUpperCase() + text.slice(1) });
     }
   },
 );
