@@ -52,12 +52,11 @@ function Sub() {
     <div
       style={{
         display: "flex",
-        alignItems: "baseline",
         justifyContent: "space-between",
       }}
     >
       <p>{text}</p>
-      <div>
+      <div style={{ writingMode: "vertical-lr" }}>
         <button
           onClick={() => {
             const textarea = document
