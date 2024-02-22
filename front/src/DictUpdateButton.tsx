@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import { queryClient } from "./Main";
 
 export function DictUpdateButton() {
   const { mutate, isPending } = useMutation({
@@ -9,6 +10,8 @@ export function DictUpdateButton() {
       ),
     onSuccess: () => alert("辞書を更新しました"),
     onError: () => alert("辞書の更新に失敗しました"),
+    // onSettled is called after onSuccess or onError, to eplicitly show the translation is updated
+    onSettled: () => queryClient.resetQueries({ queryKey: ["translation"] }),
   });
   return (
     <button onClick={() => mutate()} disabled={isPending}>

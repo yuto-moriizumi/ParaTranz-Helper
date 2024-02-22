@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import axios, { AxiosResponse } from "axios";
 import { ApiRequest, ApiResponse } from "common";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from "@tanstack/react-query";
 import { DictUpdateButton } from "./DictUpdateButton";
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 export function Main() {
   return (
@@ -14,47 +18,41 @@ export function Main() {
   );
 }
 
+const getKey = () =>
+  document
+    .getElementsByTagName("tbody")
+    .item(0)
+    ?.children.item(0)
+    ?.children.item(1)?.textContent ?? "";
+
+const getOriginalText = () =>
+  document.getElementsByClassName("original well").item(0)?.textContent ?? "";
+
 function Sub() {
-  const [originalText, setOriginalText] = useState<string | undefined>(
-    undefined,
-  );
-  const [text, setText] = useState("翻訳中...");
+  const [originalText, setOriginalText] = useState("");
   const [key, setKey] = useState("");
+
+  const { data, status } = useQuery({
+    queryKey: ["translation", originalText, key],
+    staleTime: 1000 * 60, // 60 sec
+    queryFn: async () => {
+      if (originalText === "") return "";
+      // 既に同一テキストが翻訳済みの場合は、翻訳済みテキストを取得する
+      const translation = await getPastTranslation();
+      if (translation) return translation;
+      const mode = getMode(key);
+      const translated = await translate(originalText, mode === "adjective");
+      return (mode === "definition" ? "the " : "") + translated;
+    },
+  });
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setOriginalText(
-        document.getElementsByClassName("original well").item(0)?.textContent ??
-          undefined,
-      );
-      const key =
-        document
-          .getElementsByTagName("tbody")
-          .item(0)
-          ?.children.item(0)
-          ?.children.item(1)?.textContent ?? "";
-      setKey(key.trim());
+      setOriginalText(getOriginalText());
+      setKey(getKey().trim());
     }, 100);
     return () => clearInterval(interval);
   }, []);
-
-  useEffect(() => {
-    if (originalText === undefined) return;
-    setText("翻訳中...");
-    (async () => {
-      // 既に同一テキストが翻訳済みの場合は、翻訳済みテキストを取得する
-      const translation = await getPastTranslation();
-      if (translation) return setText(translation);
-      const mode = getMode(key);
-      try {
-        const translated = await translate(originalText, mode === "adjective");
-        setText((mode === "definition" ? "the " : "") + translated);
-      } catch (error) {
-        console.error(error);
-        setText("翻訳APIエラー");
-      }
-    })();
-  }, [key, originalText]);
 
   return (
     <div
@@ -63,15 +61,21 @@ function Sub() {
         justifyContent: "space-between",
       }}
     >
-      <p>{text}</p>
+      <p>
+        {status === "pending"
+          ? "翻訳中…"
+          : status === "error"
+            ? "翻訳APIエラー"
+            : data}
+      </p>
       <div style={{ writingMode: "vertical-lr" }}>
         <button
           onClick={() => {
             const textarea = document
               .getElementsByClassName("translation form-control")
               .item(0) as HTMLTextAreaElement;
-            textarea.value = text;
-            textarea.dispatchEvent(new InputEvent("input", { data: text }));
+            textarea.value = data ?? "";
+            textarea.dispatchEvent(new InputEvent("input", { data }));
           }}
         >
           挿入
