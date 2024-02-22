@@ -38,8 +38,13 @@ function Sub() {
       const translation = await getPastTranslation();
       if (translation) return setText(translation);
       const mode = getMode(key);
-      const translated = await translate(originalText, mode === "adjective");
-      setText((mode === "definition" ? "the " : "") + translated);
+      try {
+        const translated = await translate(originalText, mode === "adjective");
+        setText((mode === "definition" ? "the " : "") + translated);
+      } catch (error) {
+        console.error(error);
+        setText("翻訳APIエラー");
+      }
     })();
   }, [key, originalText]);
 
