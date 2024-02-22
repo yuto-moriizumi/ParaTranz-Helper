@@ -9,13 +9,26 @@ async function main() {
       .getElementsByClassName("translation-area")
       .item(0);
     if (translationArea === null) return;
-    const display = document.createElement("div");
-    display.id = "paratranz-helper-container";
+    const rootDom = document.createElement("div");
+    rootDom.id = "paratranz-helper-container";
     translationArea.parentNode?.insertBefore(
-      display,
+      rootDom,
       translationArea.nextSibling,
     );
-    createRoot(display).render(Main());
+    console.log("create rootDom");
+    const root = createRoot(rootDom);
+    root.render(Main());
+
+    // unmount when rootDom is removed
+    const observer = new MutationObserver((mutationsList) => {
+      const isRootRemoved = mutationsList.some((mutation) =>
+        [...mutation.removedNodes].some((node) => node.contains(rootDom)),
+      );
+      if (!isRootRemoved) return;
+      root.unmount();
+      observer.disconnect();
+    });
+    observer.observe(document, { childList: true, subtree: true });
   }, 500);
 }
 
