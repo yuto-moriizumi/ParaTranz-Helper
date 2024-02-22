@@ -1,9 +1,17 @@
 import { useEffect, useState } from "react";
 import axios, { AxiosResponse } from "axios";
 import { ApiRequest, ApiResponse } from "common";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { DictUpdateButton } from "./DictUpdateButton";
+
+const queryClient = new QueryClient();
 
 export function Main() {
-  return <Sub />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Sub />
+    </QueryClientProvider>
+  );
 }
 
 function Sub() {
@@ -68,15 +76,7 @@ function Sub() {
         >
           挿入
         </button>
-        <button
-          onClick={() =>
-            axios.post(
-              "https://1thrt62esf.execute-api.ap-northeast-1.amazonaws.com/glossaries",
-            )
-          }
-        >
-          辞書更新
-        </button>
+        <DictUpdateButton />
       </div>
     </div>
   );
