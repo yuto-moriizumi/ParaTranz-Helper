@@ -1,5 +1,5 @@
 import { createRoot } from "react-dom/client";
-import { Main } from "./Main";
+import { Main } from "./main";
 
 async function main() {
   setInterval(() => {
