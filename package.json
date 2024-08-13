@@ -6,12 +6,13 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
+    "lint": "eslint",
     "typecheck": "npm run typecheck --workspaces"
   },
   "devDependencies": {
     "eslint": "^9.9.0",
-    "prettier": "^3.3.3"
+    "prettier": "^3.3.3",
+    "typescript-eslint": "^8.1.0"
   },
   "workspaces": [
     "api",
