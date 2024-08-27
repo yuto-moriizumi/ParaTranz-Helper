@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@tanstack/react-query": "^5.52.1",
+    "@tanstack/react-query": "^5.52.2",
     "axios": "^1.7.5",
     "common": "^1.0.0",
     "react": "^18.3.1",
