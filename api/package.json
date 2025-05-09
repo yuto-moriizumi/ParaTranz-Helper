@@ -5,7 +5,7 @@
   "main": "index.js",
   "devDependencies": {
     "@tsconfig/node18": "^18.2.4",
-    "@types/cors": "^2.8.17",
+    "@types/cors": "^2.8.18",
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.14",
     "jest": "^29.7.0",
