@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.10",
-    "@types/chrome": "^0.0.328",
+    "@types/chrome": "^0.0.329",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@typescript-eslint/eslint-plugin": "^8.35.1",
