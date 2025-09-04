@@ -10,7 +10,7 @@
     "@types/jest": "^29.5.14",
     "jest": "^30.0.0",
     "serverless-offline": "^14.4.0",
-    "serverless-webpack": "^5.15.2",
+    "serverless-webpack": "^5.15.3",
     "terser-webpack-plugin": "^5.3.14",
     "ts-jest": "^29.4.1",
     "ts-node": "^10.9.2",
