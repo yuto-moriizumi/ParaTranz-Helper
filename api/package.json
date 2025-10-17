@@ -14,7 +14,7 @@
     "terser-webpack-plugin": "^5.3.14",
     "ts-jest": "^29.4.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.3"
   },
   "scripts": {
     "dev": "sls offline",
